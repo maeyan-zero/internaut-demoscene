@@ -1,0 +1,521 @@
+<html lang="en">
+<head>
+    <title>Demoscene</title>
+    <style>
+        body {
+            background-color: #111;
+        }
+
+        canvas {
+            width: 960px;
+            height: 720px;
+            margin: 0 auto 15px;
+            display: block;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        code {
+            color: #f7f7f7;
+            text-align: center;
+            display: block;
+
+            margin-bottom: 15px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/EaselJS/1.0.2/easeljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tweenjs/1.0.2/tweenjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/SoundJS/1.0.2/soundjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.10/seedrandom.min.js"></script>
+</head>
+<body>
+    <canvas id="stage" width="320" height="240"></canvas>
+    <code>
+        credits<br>
+        music: task iii by frank endler<br>
+        font: <a href="https://opengameart.org/content/good-neighbors-pixel-font" target="_blank">good neighbours</a><br>
+        stack: <a href="https://www.createjs.com/" target="_blank">createjs</a>
+    </code>
+    <script>
+        createjs.BitmapText.calculateWidth = function() {
+            return 101;
+        };
+
+        const demo = (function() {
+            const stageWidth = 320;
+            const stageHeight = 240;
+            const stageMargin = 5;
+            const frameRate = 60;
+            const internautTextScrollTime = frameRate * 400;
+            const seed = '12345';
+            const letterSpacing = 0;
+            const starDensity = {
+                dim: 25,
+                bright: 5
+            };
+            const sunOriginX = -90 + 32;
+            const sunOriginY = -90 + 32;
+            const sunDestX = 0;
+            const sunDestY = 0;
+
+            const shoutoutText = "are you looking beyond the cloud? shoutout to my boys t-dog and dr.k +++ australian bananas scene release 2019 <3 <3 <3";
+
+            const goodNeighbour = {
+                images: ["assets/img/good_neighbors.png"],
+                frames: [
+                    [1, 0, 7, 16],
+                    [8, 0, 8, 16],
+                    [16, 0, 11, 16],
+                    [27, 0, 11, 16],
+                    [38, 0, 12, 16],
+                    [50, 0, 12, 16],
+                    [62, 0, 5, 16],
+                    [67, 0, 7, 16],
+                    [74, 0, 7, 16],
+                    [81, 0, 11, 16],
+                    [92, 0, 8, 16],
+                    [101, 0, 5, 16],
+                    [106, 0, 10, 16],
+                    [116, 0, 5, 16],
+                    [121, 0, 9, 16],
+                    [130, 0, 9, 16],
+                    [139, 0, 7, 16],
+                    [146, 0, 9, 16],
+                    [155, 0, 9, 16],
+                    [164, 0, 10, 16],
+                    [174, 0, 9, 16],
+                    [183, 0, 9, 16],
+                    [192, 0, 9, 16],
+                    [201, 0, 9, 16],
+                    [210, 0, 9, 16],
+                    [219, 0, 5, 16],
+                    [224, 0, 11, 6],
+                    [229, 0, 10, 16],
+                    [239, 0, 8, 16],
+                    [247, 0, 11, 11],
+                    [257, 0, 9, 16],
+                    [266, 0, 11, 16],
+                    [277, 0, 9, 16],
+                    [286, 0, 9, 16],
+                    [295, 0, 9, 16],
+                    [304, 0, 10, 16],
+                    [314, 0, 9, 16],
+                    [323, 0, 9, 16],
+                    [332, 0, 9, 16],
+                    [341, 0, 9, 16],
+                    [350, 0, 7, 16],
+                    [357, 0, 10, 16],
+                    [367, 0, 9, 16],
+                    [376, 0, 9, 16],
+                    [385, 0, 9, 16],
+                    [396, 0, 10, 16],
+                    [406, 0, 9, 16],
+                    [415, 0, 9, 16],
+                    [424, 0, 10, 16],
+                    [434, 0, 10, 16],
+                    [444, 0, 9, 16],
+                    [453, 0, 9, 16],
+                    [462, 0, 9, 16],
+                    [471, 0, 9, 16],
+                    [480, 0, 11, 16],
+                    [491, 0, 10, 16],
+                    [501, 0, 9, 16],
+                    [510, 0, 9, 16],
+                    [519, 0, 7, 16],
+                    [526, 0, 9, 16],
+                    [535, 0, 7, 16],
+                    [542, 0, 12, 16],
+                    [554, 0, 9, 16],
+                    [563, 0, 7, 16],
+                    [570, 0, 9, 16],
+                    [579, 0, 9, 16],
+                    [588, 0, 9, 16],
+                    [597, 0, 9, 16],
+                    [606, 0, 9, 16],
+                    [615, 0, 8, 16],
+                    [623, 0, 9, 16],
+                    [632, 0, 9, 16],
+                    [641, 0, 6, 16],
+                    [648, 0, 7, 16],
+                    [655, 0, 9, 16],
+                    [664, 0, 6, 16],
+                    [670, 0, 11, 16],
+                    [681, 0, 9, 16],
+                    [690, 0, 8, 16],
+                    [699, 0, 9, 16],
+                    [708, 0, 10, 16],
+                    [718, 0, 9, 16],
+                    [727, 0, 9, 16],
+                    [736, 0, 8, 16],
+                    [745, 0, 9, 16],
+                    [754, 0, 9, 16],
+                    [763, 0, 11, 16],
+                    [774, 0, 9, 16],
+                    [783, 0, 9, 16],
+                    [792, 0, 9, 16],
+                    [801, 0, 8, 16],
+                    [809, 0, 5, 16],
+                    [814, 0, 8, 16],
+                    [822, 0, 10, 16]
+                ],
+                animations: {
+                    "!": 0,
+                    "\"": 1,
+                    "#": 2,
+                    "$": 3,
+                    "%": 4,
+                    "&": 5,
+                    "'": 6,
+                    "(": 7,
+                    ")": 8,
+                    "*": 9,
+                    "+": 10,
+                    ",": 11,
+                    "-": 12,
+                    ".": 13,
+                    "/": 14,
+                    "0": 15,
+                    "1": 16,
+                    "2": 17,
+                    "3": 18,
+                    "4": 19,
+                    "5": 20,
+                    "6": 21,
+                    "7": 22,
+                    "8": 23,
+                    "9": 24,
+                    ":": 25,
+                    ";": 26,
+                    "<": 27,
+                    "=": 28,
+                    ">": 29,
+                    "?": 30,
+                    "@": 31,
+                    "A": 32,
+                    "B": 33,
+                    "C": 34,
+                    "D": 35,
+                    "E": 36,
+                    "F": 37,
+                    "G": 38,
+                    "H": 39,
+                    "I": 40,
+                    "J": 41,
+                    "K": 42,
+                    "L": 43,
+                    "M": 44,
+                    "N": 45,
+                    "O": 46,
+                    "P": 47,
+                    "Q": 48,
+                    "R": 49,
+                    "S": 50,
+                    "T": 51,
+                    "U": 52,
+                    "V": 53,
+                    "W": 54,
+                    "X": 55,
+                    "Y": 56,
+                    "Z": 57,
+                    "[": 58,
+                    "\\": 59,
+                    "]": 60,
+                    "^": 61,
+                    "_": 62,
+                    "`": 63,
+                    "a": 64,
+                    "b": 65,
+                    "c": 66,
+                    "d": 67,
+                    "e": 68,
+                    "f": 69,
+                    "g": 70,
+                    "h": 71,
+                    "i": 72,
+                    "j": 73,
+                    "k": 74,
+                    "l": 75,
+                    "m": 76,
+                    "n": 77,
+                    "o": 78,
+                    "p": 79,
+                    "q": 80,
+                    "r": 81,
+                    "s": 82,
+                    "t": 83,
+                    "u": 84,
+                    "v": 85,
+                    "w": 86,
+                    "x": 87,
+                    "y": 88,
+                    "z": 89,
+                    "{": 90,
+                    "|": 91,
+                    "}": 92,
+                    "~": 93
+                }
+            };
+
+            let goodNeighbourSpriteSheet = new createjs.SpriteSheet(goodNeighbour);
+
+            let stage;
+            let internautText;
+            let stars = [];
+            let internaut;
+            let earth;
+            let sun;
+            let gradiant;
+
+            let earthColour;
+            let earthShadow100;
+            let earthShadow75;
+            let earthShadow50;
+            let textureContainer;
+
+
+            let bootstrap = function() {
+                // instantiate the stage
+                stage = new createjs.Stage("stage");
+                stage.snapToPixelEnabled = true;
+
+                let internautSpriteSheet = new createjs.SpriteSheet({
+                    images: ["assets/img/internaut.png"],
+                    frames: {
+                        width: 241,
+                        height: 37
+                    }
+                });
+                internaut = new createjs.Sprite(internautSpriteSheet);
+                internaut.gotoAndStop(0);
+
+                let border = internaut.clone();
+                border.gotoAndStop(1);
+
+                gradiant = new createjs.Bitmap("assets/img/gradiant.png");
+                gradiant.compositeOperation = "source-in";
+
+                // instantiate entities
+                internautText = new createjs.BitmapText(shoutoutText, goodNeighbourSpriteSheet);
+                internautText.y = stageHeight * 0.8;
+                internautText.spaceWidth = 5;
+                internautText.letterSpacing = letterSpacing;
+
+                textureContainer = new createjs.Container();
+                textureContainer.addChild(internaut);
+                textureContainer.addChild(gradiant);
+                textureContainer.addChild(border);
+                textureContainer.cache(0, 0, 241, 37);
+                textureContainer.regX = 120;
+                textureContainer.x = stageWidth * 0.5;
+                textureContainer.y = stageHeight * 0.25;
+
+                earth = new createjs.Container();
+                earth.x = stageWidth * 0.5;
+                earth.y = stageHeight + 20;
+
+                sun = new createjs.Bitmap("assets/img/sun.png");
+                sun.regX = 32;
+                sun.regY = 32;
+                sun.x = sunDestX;
+                sun.y = sunDestY;
+
+                earthColour = new createjs.Bitmap("assets/img/earth.png");
+                earthColour.regX = 90;
+                earthColour.regY = 90;
+
+                earthShadow100 = new createjs.Bitmap("assets/img/earth-shadow-100.png");
+                earthShadow100.regX = 90;
+                earthShadow100.regY = 90;
+                earthShadow100.alpha = 0.5;
+
+                earthShadow75 = new createjs.Bitmap("assets/img/earth-shadow-75.png");
+                earthShadow75.regX = 67;
+                earthShadow75.regY = 67;
+                earthShadow75.x = 90 - 67 - 10;
+                earthShadow75.alpha = 0.15;
+
+                earthShadow50 = new createjs.Bitmap("assets/img/earth-shadow-50.png");
+                earthShadow50.regX = 45;
+                earthShadow50.regY = 45;
+                earthShadow50.x = 90 - 45 - 20;
+                earthShadow50.alpha = 0.15;
+
+                earth.addChild(sun, earthColour, earthShadow100, earthShadow75, earthShadow50);
+
+                // instantiate stars
+                for (let p in starDensity) {
+                    for (let i = 0; i < starDensity[p]; i++) {
+                        stars.push(makeStarSprite(p));
+                    }
+                }
+
+                // setup and start the ticker
+                createjs.Ticker.framerate = frameRate;
+
+                // assign the seed
+                Math.seedrandom(seed);
+
+                // add entities to stage
+                stage.addChild(...stars);
+                stage.addChild(earth);
+                stage.addChild(internautText);
+                stage.addChild(textureContainer);
+            };
+
+            let startAnimation = function() {
+                createjs.Ticker.addEventListener("tick", onTick);
+                animateInternautText();
+                animateSun();
+                animateSunShadow();
+                animateInternaut();
+                animateEarth();
+            };
+
+            let stopAnimation = function() {
+                createjs.Ticker.removeEventListener("tick", onTick);
+            };
+
+            let onTick = function(event) {
+                if (!event.paused) {
+                    textureContainer.cache(0, 0, 241, 37);
+                    stage.update(event);
+                }
+            };
+
+            let makeStarSprite = function(animation) {
+                let data = {
+                    images: ["assets/img/star.png"],
+                    frames: { width: 5, height: 5, regX: 3, regY: 3 },
+                    framerate: 2,
+                    animations: {
+                        bright: {
+                            frames: [1, 2],
+                            speed: 1
+                        },
+                        dim: {
+                            frames: [0, 0, 1],
+                            speed: 1
+                        }
+                    }
+                };
+                let spriteSheet = new createjs.SpriteSheet(data);
+                let sprite = new createjs.Sprite(spriteSheet, animation);
+
+                // assign random position
+                sprite.x = random(stageMargin, stageWidth - stageMargin);
+                sprite.y = random(stageMargin, stageHeight - stageMargin);
+
+                // start on random frame
+                let frames = data.animations[animation].frames;
+                let initialFrame = random(0, frames.length);
+                for (let i = 0; i < initialFrame; i++) {
+                    sprite.advance();
+                }
+
+                console.log('Made star.', {animation: animation, initialFrame: initialFrame});
+
+                // return
+                return sprite;
+            };
+
+            let animateInternautText = function() {
+                // set initial position
+                let x = stageWidth;
+                internautText.x = x;
+
+                // scroll let to right indefinatley
+                x = 0 - getBitmapTextLength(internautText.text, goodNeighbour);
+                createjs.Tween.get(internautText)
+                    .to({ x: x }, internautTextScrollTime)
+                    .call(animateInternautText);
+            };
+
+            let animateSun = function() {
+                createjs.Tween.get(sun)
+                    .to({ x: sunOriginX, y: sunOriginY }, 5000, createjs.Ease.sineInOut)
+                    .to({ x: sunDestX, y: sunDestY }, 5000, createjs.Ease.sineInOut)
+                    .call(animateSun);
+            };
+
+            let animateSunShadow = function() {
+                createjs.Tween.get(earthShadow100)
+                    .to({ alpha: 0.1 }, 4000, createjs.Ease.sineInOut)
+                    .wait(2000)
+                    .to({ alpha: 0.5 }, 4000, createjs.Ease.sineInOut)
+                    .call(animateSunShadow);
+            };
+
+            let animateInternaut = function() {
+                // createjs.Tween.get(textureParams)
+                //     .to({ regY: -50 }, 5000)
+                //     .to({ regY: 0 }, 0)
+                //     .call(animateInternaut);
+
+                createjs.Tween.get(gradiant)
+                    .to({ y: -37 }, 5000)
+                    .to({ y: 0 }, 0)
+                    .call(animateInternaut);
+            };
+
+            let animateEarth = function() {
+                createjs.Tween.get(earth)
+                    .to({ y: stageHeight }, 15000, createjs.Ease.sineOut)
+            };
+
+            let random = function(min, max) {
+                return Math.floor(Math.random() * Math.floor(max - min)) + min;
+            };
+
+            // TODO extend the BitmapText class
+            let getBitmapTextLength = function(text, data) {
+                let bag = text.split("");
+                let len = 0;
+                let charCount = false;
+
+                for (let i = 0; i < bag.length; i++) {
+                    let char = bag[i];
+                    if (char === " ") {
+                        len += 5;
+                        continue;
+                    }
+
+                    let animationIdx = data.animations[char];
+                    let charLen = data.frames[animationIdx][2];
+                    len = len + charLen + letterSpacing;
+                    charCount++;
+                }
+
+                if (charCount > 1) {
+                    len -= letterSpacing;
+                }
+
+                return len;
+            };
+
+            return {
+                start: function() {
+                    bootstrap();
+                    startAnimation();
+                },
+                stop: function() {
+                    stopAnimation();
+                }
+            }
+        })();
+
+        demo.start();
+
+        createjs.Sound.alternateExtensions = ["mp3"];
+        createjs.Sound.on("fileload", this.loadHandler, this);
+        createjs.Sound.registerSound("assets/sfx/task-iii.ogg", "sound");
+        function loadHandler(event) {
+            // This is fired for each sound that is registered.
+            var instance = createjs.Sound.play("sound");  // play using id.  Could also use full sourcepath or event.src.
+            instance.on("complete", this.handleComplete, this);
+            instance.volume = 0.5;
+        }
+    </script>
+</body>
+</html>
